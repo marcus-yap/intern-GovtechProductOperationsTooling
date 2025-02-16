@@ -1,0 +1,72 @@
+[
+	{
+		"id": 1,
+		"name": "Marcus Yap",
+		"cumulativeGPA": 3.75,
+		"lastSemesterGPA": 4.0,
+		"techerId": 1
+	},
+	{
+		"id": 2,
+		"name": "Sean Lim",
+		"cumulativeGPA": 4.0,
+		"lastSemesterGPA": 4.0,
+		"techerId": 1
+	},
+	{
+		"id": 3,
+		"name": "Chin Wei Xuan",
+		"cumulativeGPA": 3.66,
+		"lastSemesterGPA": 3.45,
+		"techerId": 1
+	},
+	{
+		"id": 4,
+		"name": "Ashley Shruthi",
+		"cumulativeGPA": 3.98,
+		"lastSemesterGPA": 3.95,
+		"techerId": 1
+	},
+	{
+		"id": 5,
+		"name": "Matthias Lee",
+		"cumulativeGPA": 3.0,
+		"lastSemesterGPA": 3.21,
+		"techerId": 1
+	},
+	{
+		"id": 6,
+		"name": "Michelle Yap",
+		"cumulativeGPA": 3.45,
+		"lastSemesterGPA": 3.5,
+		"techerId": 2
+	},
+	{
+		"id": 7,
+		"name": "Chu Yuan Cheng",
+		"cumulativeGPA": 3.56,
+		"lastSemesterGPA": 3.23,
+		"techerId": 2
+	},
+	{
+		"id": 8,
+		"name": "Sherwyn Ng",
+		"cumulativeGPA": 3.89,
+		"lastSemesterGPA": 3.93,
+		"techerId": 2
+	},
+	{
+		"id": 9,
+		"name": "Eileen Lee",
+		"cumulativeGPA": 3.0,
+		"lastSemesterGPA": 3.1,
+		"techerId": 2
+	},
+	{
+		"id": 10,
+		"name": "Jane Lim",
+		"cumulativeGPA": 3.76,
+		"lastSemesterGPA": 3.85,
+		"techerId": 2
+	}
+]

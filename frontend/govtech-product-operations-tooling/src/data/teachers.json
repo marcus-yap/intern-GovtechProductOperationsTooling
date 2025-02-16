@@ -1,0 +1,4 @@
+[
+	{ "id": 1, "name": "Prof Lo Siaw Ling", "students": [1, 2, 3, 4, 5] },
+	{ "id": 2, "name": "Prof Alan Ho", "students": [6, 7, 8, 9, 10] }
+]
