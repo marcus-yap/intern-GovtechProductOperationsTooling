@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { computed, h } from "vue";
+	import { computed, h, ref } from "vue";
 	import { RouterLink } from "vue-router";
 	import {
 		FlexRender,
@@ -30,25 +30,24 @@
 		if (teacherStudents.length === 0) return null;
 
 		if (type === "semester") {
-			return (
-				teacherStudents.reduce(
-					(sum, student) =>
-						sum +
-						(student.past8SemestersGPA[student.past8SemestersGPA.length - 1] ||
-							0),
-					0
-				) / teacherStudents.length
+			const total = teacherStudents.reduce(
+				(sum, student) =>
+					sum +
+					(student.past8SemestersGPA[student.past8SemestersGPA.length - 1] ||
+						0),
+				0
 			);
+			return total / teacherStudents.length;
 		}
 
 		if (type === "cumulative") {
-			return (
-				teacherStudents.reduce(
-					(sum, student) => sum + student.cumulativeGPA,
-					0
-				) / teacherStudents.length
+			const total = teacherStudents.reduce(
+				(sum, student) => sum + student.cumulativeGPA,
+				0
 			);
+			return total / teacherStudents.length;
 		}
+		return null;
 	};
 
 	const columns = [
@@ -65,25 +64,37 @@
 			},
 			enableSorting: true,
 		}),
-		columnHelper.accessor((row) => getAverageGPA(row, "semester"), {
-			id: "avgLastSemesterGPA",
-			header: "Avg Last Semester GPA",
-			cell: (info) => {
-				const value = info.getValue();
-				return value !== null ? value.toFixed(2) : "N/A";
+		columnHelper.accessor(
+			(row) => {
+				const gpa = getAverageGPA(row, "semester");
+				return gpa != null ? gpa.toFixed(2) : "N/A";
 			},
-			enableSorting: true,
-		}),
-		columnHelper.accessor((row) => getAverageGPA(row, "cumulative"), {
-			id: "avgCumulativeGPA",
-			header: "Avg Cumulative GPA",
-			cell: (info) => {
-				const value = info.getValue();
-				return value !== null ? value.toFixed(2) : "N/A";
+			{
+				id: "avgLastSemesterGPA",
+				header: "Avg Last Semester GPA",
+				enableSorting: true,
+			}
+		),
+		columnHelper.accessor(
+			(row) => {
+				const gpa = getAverageGPA(row, "cumulative");
+				return gpa != null ? gpa.toFixed(2) : "N/A";
 			},
-			enableSorting: true,
-		}),
+			{
+				id: "avgCumulativeGPA",
+				header: "Avg Cumulative GPA",
+				enableSorting: true,
+			}
+		),
 	];
+
+	const tableData = computed(() => {
+		return props.teachers.map((teacher) => ({
+			...teacher,
+			avgLastSemesterGPA: getAverageGPA(teacher, "semester").value,
+			avgCumulativeGPA: getAverageGPA(teacher, "cumulative").value,
+		}));
+	});
 
 	const table = useVueTable({
 		data: computed(() => props.teachers || []),
@@ -95,7 +106,7 @@
 
 <template>
 	<div>
-		<table class="table">
+		<table class="table" v-if="props.students.length > 0">
 			<thead>
 				<tr>
 					<th
@@ -123,6 +134,7 @@
 				</tr>
 			</tbody>
 		</table>
+		<p v-else>Loading...</p>
 	</div>
 </template>
 

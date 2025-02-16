@@ -2,7 +2,7 @@
 	import { ref, onMounted } from "vue";
 	import { fetchTeachers, fetchStudents } from "@/api/mockAPI";
 	import TeacherTable from "@/components/TeacherTable.vue";
-	import GpaChart from "@/components/GpaChart.vue";
+	import GPAChart from "@/components/GPAChart.vue";
 
 	const teachers = ref([]);
 	const students = ref([]);
@@ -24,7 +24,7 @@
 	<div>
 		<TeacherTable :teachers="teachers" :students="students" />
 		<div v-if="!loading && students.length">
-			<GpaChart :students="students" />
+			<GPAChart :students="students" />
 		</div>
 	</div>
 </template>

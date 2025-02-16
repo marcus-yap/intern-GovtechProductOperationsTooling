@@ -2,7 +2,7 @@
 	import { ref, computed, onMounted } from "vue";
 	import { useRoute } from "vue-router";
 	import { fetchTeacherById, fetchStudents } from "@/api/mockAPI";
-	import GpaChart from "@/components/GpaChart.vue";
+	import GPAChart from "@/components/GPAChart.vue";
 
 	const route = useRoute();
 	const teacher = ref<any>(null);
@@ -29,7 +29,7 @@
 	});
 
 	const avgLastSemesterGPA = computed(() => {
-		if (!teacherStudents.value.length) return "N/A";
+		if (!teacherStudents.value.length) return null;
 		const sum = teacherStudents.value.reduce((acc, student) => {
 			const lastSemester =
 				student.past8SemestersGPA[student.past8SemestersGPA.length - 1] || 0;
@@ -39,7 +39,7 @@
 	});
 
 	const avgCumulativeGPA = computed(() => {
-		if (!teacherStudents.value.length) return "N/A";
+		if (!teacherStudents.value.length) return null;
 		const sum = teacherStudents.value.reduce(
 			(acc, student) => acc + student.cumulativeGPA,
 			0
@@ -57,7 +57,7 @@
 		<p>
 			Average Cumulative GPA: <strong>{{ avgCumulativeGPA }}</strong>
 		</p>
-		<GpaChart :students="teacherStudents" />
+		<GPAChart :students="teacherStudents" />
 	</div>
 	<div v-else>
 		<p>Loading teacher data...</p>

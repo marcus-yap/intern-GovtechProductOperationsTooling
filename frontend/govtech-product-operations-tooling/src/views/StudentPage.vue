@@ -2,7 +2,7 @@
 	import { ref, onMounted } from "vue";
 	import { useRoute } from "vue-router";
 	import { fetchStudentById } from "@/api/mockAPI";
-	import GpaChart from "@/components/GpaChart.vue";
+	import GPAChart from "@/components/GPAChart.vue";
 
 	const route = useRoute();
 	const student = ref<any>(null);
@@ -29,7 +29,7 @@
 				Last Semester's GPA:
 				{{ student.past8SemestersGPA[student.past8SemestersGPA.length - 1] }}
 			</p>
-			<GpaChart :students="student" />
+			<GPAChart :students="student" />
 		</div>
 	</div>
 </template>
