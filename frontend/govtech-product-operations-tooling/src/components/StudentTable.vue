@@ -16,13 +16,13 @@
 		},
 	});
 
-	const columnHelper = createColumnHelper();
+	const columnHelper = createColumnHelper<any>();
 
 	const columns = [
 		columnHelper.accessor("name", {
 			header: "Name",
-			cell: (info) => {
-				const studentId = info.row.original.id;
+			cell: (info: any) => {
+				const studentId = (info.row.original as any).id;
 				const studentName = info.getValue();
 				return h(
 					RouterLink,
@@ -34,21 +34,21 @@
 		}),
 		columnHelper.accessor("cumulativeGPA", {
 			header: "Cumulative GPA",
-			cell: (info) => info.getValue(),
+			cell: (info: any) => info.getValue(),
 			enableSorting: true,
 		}),
 		columnHelper.accessor(
-			(row) => row.past8SemestersGPA[row.past8SemestersGPA.length - 1],
+			(row: any) => row.past8SemestersGPA[row.past8SemestersGPA.length - 1],
 			{
 				id: "lastSemesterGPA",
 				header: "Last Semester's GPA",
-				cell: (info) => info.getValue(),
+				cell: (info: any) => info.getValue(),
 				enableSorting: true,
 			}
 		),
 	];
 
-	const table = useVueTable({
+	const table = useVueTable<any>({
 		data: computed(() => props.students || []),
 		columns,
 		getCoreRowModel: getCoreRowModel(),

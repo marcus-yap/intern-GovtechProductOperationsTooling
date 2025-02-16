@@ -22,16 +22,16 @@
 
 	const columnHelper = createColumnHelper();
 
-	const getAverageGPA = (teacher, type) => {
-		const teacherStudents = props.students.filter((student) =>
+	const getAverageGPA = (teacher: any, type: string): number => {
+		const teacherStudents = props.students.filter((student: any) =>
 			teacher.students.includes(student.id)
 		);
 
-		if (teacherStudents.length === 0) return null;
+		if (teacherStudents.length === 0) return 0;
 
 		if (type === "semester") {
 			const total = teacherStudents.reduce(
-				(sum, student) =>
+				(sum: number, student: any) =>
 					sum +
 					(student.past8SemestersGPA[student.past8SemestersGPA.length - 1] ||
 						0),
@@ -42,19 +42,19 @@
 
 		if (type === "cumulative") {
 			const total = teacherStudents.reduce(
-				(sum, student) => sum + student.cumulativeGPA,
+				(sum: number, student: any) => sum + student.cumulativeGPA,
 				0
 			);
 			return total / teacherStudents.length;
 		}
-		return null;
+		return 0;
 	};
 
 	const columns = [
 		columnHelper.accessor("name", {
 			header: "Name",
-			cell: (info) => {
-				const teacherId = info.row.original.id;
+			cell: (info: any) => {
+				const teacherId = (info.row.original as any).id;
 				const teacherName = info.getValue();
 				return h(
 					RouterLink,
@@ -65,9 +65,9 @@
 			enableSorting: true,
 		}),
 		columnHelper.accessor(
-			(row) => {
+			(row: any) => {
 				const gpa = getAverageGPA(row, "semester");
-				return gpa != null ? gpa.toFixed(2) : "N/A";
+				return gpa !== null ? gpa.toFixed(2) : "N/A";
 			},
 			{
 				id: "avgLastSemesterGPA",
@@ -76,9 +76,9 @@
 			}
 		),
 		columnHelper.accessor(
-			(row) => {
+			(row: any) => {
 				const gpa = getAverageGPA(row, "cumulative");
-				return gpa != null ? gpa.toFixed(2) : "N/A";
+				return gpa !== null ? gpa.toFixed(2) : "N/A";
 			},
 			{
 				id: "avgCumulativeGPA",
@@ -89,14 +89,14 @@
 	];
 
 	const tableData = computed(() => {
-		return props.teachers.map((teacher) => ({
+		return props.teachers.map((teacher: any) => ({
 			...teacher,
-			avgLastSemesterGPA: getAverageGPA(teacher, "semester").value,
-			avgCumulativeGPA: getAverageGPA(teacher, "cumulative").value,
+			avgLastSemesterGPA: getAverageGPA(teacher, "semester"),
+			avgCumulativeGPA: getAverageGPA(teacher, "cumulative"),
 		}));
 	});
 
-	const table = useVueTable({
+	const table = useVueTable<any>({
 		data: computed(() => props.teachers || []),
 		columns,
 		getCoreRowModel: getCoreRowModel(),

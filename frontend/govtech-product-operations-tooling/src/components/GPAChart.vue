@@ -1,6 +1,7 @@
 <script setup lang="ts">
 	import { ref, onMounted, onUnmounted, watch, computed, nextTick } from "vue";
 	import { Chart, registerables } from "chart.js";
+	import type { TooltipItem } from "chart.js";
 
 	Chart.register(...registerables);
 
@@ -21,14 +22,14 @@
 
 	const chartData = computed(() => {
 		const labels = Array.from({ length: 8 }, (_, i) => `Semester ${-8 + i}`);
-		const avgSemesterGPA = [];
-		const avgCumulativeGPA = [];
+		const avgSemesterGPA: number[] = [];
+		const avgCumulativeGPA: number[] = [];
 		const count = studentsArray.value.length || 1;
 
 		for (let i = 0; i < 8; i++) {
 			let totalSemester = 0;
 			let totalCumulative = 0;
-			studentsArray.value.forEach((student) => {
+			studentsArray.value.forEach((student: any) => {
 				totalSemester += student.past8SemestersGPA[i] || 0;
 				let perStudentSum = 0;
 				for (let j = 0; j <= i; j++) {
@@ -78,7 +79,10 @@
 					legend: { position: "top" },
 					tooltip: {
 						callbacks: {
-							label: (tooltipItem) => tooltipItem.raw.toFixed(2),
+							label: (tooltipItem: TooltipItem<"line">) => {
+								const raw = tooltipItem.raw as number;
+								return raw.toFixed(2);
+							},
 						},
 					},
 				},

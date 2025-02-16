@@ -4,8 +4,8 @@
 	import TeacherTable from "@/components/TeacherTable.vue";
 	import GPAChart from "@/components/GPAChart.vue";
 
-	const teachers = ref([]);
-	const students = ref([]);
+	const teachers = ref<any[]>([]);
+	const students = ref<any[]>([]);
 	const loading = ref(true);
 
 	onMounted(async () => {
