@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, onMounted, onUnmounted, watch, computed } from "vue";
+	import { ref, onMounted, onUnmounted, watch, computed, nextTick } from "vue";
 	import { Chart, registerables } from "chart.js";
 
 	Chart.register(...registerables);
@@ -23,7 +23,7 @@
 		const labels = Array.from({ length: 8 }, (_, i) => `Semester ${-8 + i}`);
 		const avgSemesterGPA = [];
 		const avgCumulativeGPA = [];
-		const count = studentsArray.value.length;
+		const count = studentsArray.value.length || 1;
 
 		for (let i = 0; i < 8; i++) {
 			let totalSemester = 0;
@@ -64,7 +64,7 @@
 	});
 
 	const createChart = () => {
-		if (!chartCanvas.value || studentsArray.value.length === 0) return;
+		if (!chartCanvas.value) return;
 		if (chartInstance.value) {
 			chartInstance.value.destroy();
 		}
@@ -86,20 +86,28 @@
 		});
 	};
 
-	onUnmounted(() => {
-		if (chartInstance.value) {
-			chartInstance.value.destroy();
-		}
+	onMounted(async () => {
+		await nextTick();
+		createChart();
 	});
 
 	watch(
 		() => props.students,
-		() => createChart(),
+		() => {
+			if (chartInstance.value) {
+				chartInstance.value.data = chartData.value;
+				chartInstance.value.update();
+			} else {
+				createChart();
+			}
+		},
 		{ deep: true, immediate: true }
 	);
 
-	onMounted(() => {
-		createChart();
+	onUnmounted(() => {
+		if (chartInstance.value) {
+			chartInstance.value.destroy();
+		}
 	});
 </script>
 

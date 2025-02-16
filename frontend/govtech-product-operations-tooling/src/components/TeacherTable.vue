@@ -1,5 +1,5 @@
 <script setup lang="ts">
-	import { ref, computed, h } from "vue";
+	import { computed, h } from "vue";
 	import { RouterLink } from "vue-router";
 	import {
 		FlexRender,
@@ -10,6 +10,10 @@
 	} from "@tanstack/vue-table";
 
 	const props = defineProps({
+		teachers: {
+			type: Array,
+			required: true,
+		},
 		students: {
 			type: Array,
 			required: true,
@@ -18,38 +22,71 @@
 
 	const columnHelper = createColumnHelper();
 
+	const getAverageGPA = (teacher, type) => {
+		const teacherStudents = props.students.filter((student) =>
+			teacher.students.includes(student.id)
+		);
+
+		if (teacherStudents.length === 0) return null;
+
+		if (type === "semester") {
+			return (
+				teacherStudents.reduce(
+					(sum, student) =>
+						sum +
+						(student.past8SemestersGPA[student.past8SemestersGPA.length - 1] ||
+							0),
+					0
+				) / teacherStudents.length
+			);
+		}
+
+		if (type === "cumulative") {
+			return (
+				teacherStudents.reduce(
+					(sum, student) => sum + student.cumulativeGPA,
+					0
+				) / teacherStudents.length
+			);
+		}
+	};
+
 	const columns = [
 		columnHelper.accessor("name", {
 			header: "Name",
 			cell: (info) => {
-				const studentId = info.row.original.id;
-				const studentName = info.getValue();
+				const teacherId = info.row.original.id;
+				const teacherName = info.getValue();
 				return h(
 					RouterLink,
-					{ to: `/students/${studentId}` },
-					() => studentName
+					{ to: `/teachers/${teacherId}` },
+					() => teacherName
 				);
 			},
 			enableSorting: true,
 		}),
-		columnHelper.accessor("cumulativeGPA", {
-			header: "Cumulative GPA",
-			cell: (info) => info.getValue(),
+		columnHelper.accessor((row) => getAverageGPA(row, "semester"), {
+			id: "avgLastSemesterGPA",
+			header: "Avg Last Semester GPA",
+			cell: (info) => {
+				const value = info.getValue();
+				return value !== null ? value.toFixed(2) : "N/A";
+			},
 			enableSorting: true,
 		}),
-		columnHelper.accessor(
-			(row) => row.past8SemestersGPA[row.past8SemestersGPA.length - 1],
-			{
-				id: "lastSemesterGPA",
-				header: "Last Semester's GPA",
-				cell: (info) => info.getValue(),
-				enableSorting: true,
-			}
-		),
+		columnHelper.accessor((row) => getAverageGPA(row, "cumulative"), {
+			id: "avgCumulativeGPA",
+			header: "Avg Cumulative GPA",
+			cell: (info) => {
+				const value = info.getValue();
+				return value !== null ? value.toFixed(2) : "N/A";
+			},
+			enableSorting: true,
+		}),
 	];
 
 	const table = useVueTable({
-		data: computed(() => props.students || []),
+		data: computed(() => props.teachers || []),
 		columns,
 		getCoreRowModel: getCoreRowModel(),
 		getSortedRowModel: getSortedRowModel(),
