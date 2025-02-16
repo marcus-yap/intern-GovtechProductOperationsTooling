@@ -1,0 +1,8 @@
+{
+  "builds": [
+    {
+      "src": "frontend/govtech-product-operations-tooling/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    }
+  ]
