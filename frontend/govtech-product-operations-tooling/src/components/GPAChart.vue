@@ -122,6 +122,7 @@
 		position: relative;
 		height: 400px;
 		width: 100%;
+		min-width: 600px;
 		margin: 20px 0;
 	}
 </style>

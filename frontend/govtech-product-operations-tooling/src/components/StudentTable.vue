@@ -72,6 +72,7 @@
 						/>
 						<span v-if="header.column.getIsSorted() === 'asc'">▲</span>
 						<span v-else-if="header.column.getIsSorted() === 'desc'">▼</span>
+						<span v-else>⇅</span>
 					</th>
 				</tr>
 			</thead>

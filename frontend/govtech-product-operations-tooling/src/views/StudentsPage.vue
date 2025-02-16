@@ -20,6 +20,7 @@
 
 <template>
 	<div>
+		<h1>Cohort - Class of 2024</h1>
 		<StudentTable :students="students" />
 		<div v-if="!loading && students.length">
 			<GPAChart :students="students" />
