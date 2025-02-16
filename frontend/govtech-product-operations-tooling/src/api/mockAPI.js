@@ -1,5 +1,5 @@
-import students from "@data/students.json";
-import teachers from "@data/teachers.json";
+import students from "../data/students.json";
+import teachers from "../data/teachers.json";
 
 export const fetchStudents = async () => {
 	return students;
