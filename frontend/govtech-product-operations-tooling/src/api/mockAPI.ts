@@ -22,5 +22,5 @@ export const fetchStudentsByTeacherId = async (teacherId) => {
 };
 
 export const fetchTeachersByStudentId = async (studentId) => {
-	return teachers.filter((teacher) => teacher.studentIds.includes(studentId));
+	return teachers.filter((teacher) => teacher.students.includes(studentId));
 };

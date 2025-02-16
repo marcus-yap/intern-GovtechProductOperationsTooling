@@ -1,7 +1,8 @@
 # intern-GovtechProductOperationsTooling
 
 ## Setup
-Navigate to `govtech-product-operations-tooling` folder and install dependencies
+
+Navigate to `frontend/govtech-product-operations-tooling` folder and install dependencies
 
 ```
 npm install

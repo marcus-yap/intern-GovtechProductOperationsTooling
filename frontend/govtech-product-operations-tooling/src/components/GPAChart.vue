@@ -6,7 +6,7 @@
 
 	const props = defineProps({
 		students: {
-			type: Array,
+			type: [Array, Object],
 			required: true,
 		},
 	});
@@ -14,15 +14,21 @@
 	const chartInstance = ref<Chart | null>(null);
 	const chartCanvas = ref<HTMLCanvasElement | null>(null);
 
+	const isSingleStudent = computed(() => !Array.isArray(props.students));
+	const studentsArray = computed(() =>
+		isSingleStudent.value ? [props.students] : props.students
+	);
+
 	const chartData = computed(() => {
+		const labels = Array.from({ length: 8 }, (_, i) => `Semester ${-8 + i}`);
 		const avgSemesterGPA = [];
 		const avgCumulativeGPA = [];
-		const count = props.students.length;
+		const count = studentsArray.value.length;
 
 		for (let i = 0; i < 8; i++) {
 			let totalSemester = 0;
 			let totalCumulative = 0;
-			props.students.forEach((student) => {
+			studentsArray.value.forEach((student) => {
 				totalSemester += student.past8SemestersGPA[i] || 0;
 				let perStudentSum = 0;
 				for (let j = 0; j <= i; j++) {
@@ -35,18 +41,20 @@
 		}
 
 		return {
-			labels: Array.from({ length: 8 }, (_, i) =>
-				i < 7 ? `Semester ${-8 + i}` : "Last Semester"
-			),
+			labels,
 			datasets: [
 				{
-					label: "Average Semester GPA (Past 8 Semesters)",
+					label: isSingleStudent.value
+						? "Semester GPA"
+						: "Average Semester GPA",
 					data: avgSemesterGPA,
 					borderColor: "purple",
 					fill: false,
 				},
 				{
-					label: "Average Cumulative GPA (Past 8 Semesters)",
+					label: isSingleStudent.value
+						? "Cumulative GPA"
+						: "Average Cumulative GPA",
 					data: avgCumulativeGPA,
 					borderColor: "darkorange",
 					fill: false,
@@ -56,12 +64,10 @@
 	});
 
 	const createChart = () => {
-		if (!chartCanvas.value || !props.students.length) return;
-
+		if (!chartCanvas.value || studentsArray.value.length === 0) return;
 		if (chartInstance.value) {
 			chartInstance.value.destroy();
 		}
-
 		chartInstance.value = new Chart(chartCanvas.value, {
 			type: "line",
 			data: chartData.value,
@@ -69,9 +75,7 @@
 				responsive: true,
 				maintainAspectRatio: false,
 				plugins: {
-					legend: {
-						position: "top",
-					},
+					legend: { position: "top" },
 					tooltip: {
 						callbacks: {
 							label: (tooltipItem) => tooltipItem.raw.toFixed(2),
@@ -82,22 +86,16 @@
 		});
 	};
 
-	// Cleanup chart when component is unmounted
 	onUnmounted(() => {
 		if (chartInstance.value) {
 			chartInstance.value.destroy();
 		}
 	});
 
-	// Watch for changes in students prop and re-render the chart
 	watch(
 		() => props.students,
-		(newStudents) => {
-			if (newStudents?.length) {
-				createChart();
-			}
-		},
-		{ deep: true, immediate: true } // This will run on component mount
+		() => createChart(),
+		{ deep: true, immediate: true }
 	);
 
 	onMounted(() => {

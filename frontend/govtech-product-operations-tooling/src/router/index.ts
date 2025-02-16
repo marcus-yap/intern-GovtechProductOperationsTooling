@@ -7,8 +7,8 @@ import TeacherPage from "../views/TeacherPage.vue";
 const router = createRouter({
 	history: createWebHistory(import.meta.env.BASE_URL),
 	routes: [
-		{ path: "/", component: StudentsPage },
-		{ path: "/students/:id", component: StudentPage },
+		{ path: "/", name: "students", component: StudentsPage },
+		{ path: "/students/:id", name: "student", component: StudentPage },
 		{ path: "/teachers", component: TeachersPage },
 		{ path: "/teachers/:id", component: TeacherPage },
 	],
